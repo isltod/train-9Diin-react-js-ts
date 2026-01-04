@@ -39,3 +39,44 @@ console.log(val2)
 // 또는 객체 속성 참조 오류 같은...
 console.log(user.email)
 
+
+// 심볼 타입이란 건...뭔가 Symbol로 감싼 객체 같은거 같은데...즉 참조 같은걸 의미하는 듯...
+const sym1 = Symbol("testStr")
+console.log(sym1)
+console.log(sym1.toString())
+console.log(typeof sym1)
+const sym2 = Symbol(123456)
+console.log(sym2)
+console.log(sym2.toString())
+
+// 이걸 객체 키로 사용할 수 있고, 이 경우 통상의 key에는 안잡힌다...
+user[sym1] = "test strings..."
+console.log(user[sym1])
+console.log(Object.keys(user))
+// 근데 또 신기하게 . 문법을 사용하면 키에 잡힌다...
+user.sym1 = "test strings..."
+console.log(user.sym1)
+console.log(Object.keys(user))
+
+// 이미 생성된 참조를 다시 얻어오려면 for, 그 키를 얻어오려면 keyFor 메서드를 사용한다...
+const sym3 = Symbol.for("testStr")
+console.log(sym3)
+console.log(Symbol.keyFor(sym3))
+
+// 배열은 인덱스에서 length를 그냥 쓸 수 있다는 정도...인줄 알았는데, 그건 안되는 문법인데?
+const animals = ["호랑이", "사자", "코끼리", "원숭이", "악어"]
+console.log(animals[animals.length - 1]);
+
+// Object 생성자, 사용자정의 생성자, 리터럴 생성자를 이용하면 다 객체를 만들지만,
+// 이 중 사용자 정의 생성자만 타입 이름이 생긴다...
+const member1 = new Object()
+member1.name = "울프"
+member1.address = "수원시"
+console.log(member1)
+function Member(name, address) {
+    this.name = name;
+    this.address = address;
+}
+const member2 = new Member("울프", "수원시")
+console.log(member2)
+console.log(user)
