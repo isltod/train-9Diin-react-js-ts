@@ -93,10 +93,10 @@ replay_pid*
 *.iml                    # IntelliJ IDEA project files
 
 # Local configuration files (IDE specific)
-.idea/                   # IntelliJ IDEA project configuration directory
-.vscode/                 # VS Code configuration directory
-.project                 # Eclipse project files
-.settings/               # Eclipse project settings
+.idea/
+.vscode/
+.project
+.settings/
 .lifecycle/
 *.xcworkspace/           # Xcode workspace files
 !*.xcworkspace/*.xcscheme/
