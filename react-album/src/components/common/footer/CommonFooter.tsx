@@ -4,7 +4,7 @@ import arrowRight from "@assets/icons/icon-arrowRight.svg"
 
 function CommonFooter() {
   return (
-    <div className={styles.footer}>
+    <footer className={styles.footer}>
       <div className={styles.pagination}>
         <button className={styles.pagination__button}>
           <img src={arrowLeft} alt="arrow left" />
@@ -14,7 +14,7 @@ function CommonFooter() {
           <img src={arrowRight} alt="arrow right" />
         </button>
       </div>
-    </div>
+    </footer>
   )
 }
 
