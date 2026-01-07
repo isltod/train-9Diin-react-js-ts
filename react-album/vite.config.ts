@@ -16,12 +16,12 @@ export default defineConfig({
       '@recoil': fileURLToPath(new URL('./src/recoil', import.meta.url)),
     }
   },
-  // SCSS 전역 사용
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@use "@assets/styles/main.scss";`,
-      }
-    }
-  }
+  // SCSS 전역 사용 - 이렇게 사용하는 건 deprecated 된거 같은데...
+  // css: {
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `@import "@assets/styles/main.scss";`,
+  //     },
+  //   },
+  // },
 })
