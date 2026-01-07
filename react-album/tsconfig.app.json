@@ -22,7 +22,21 @@
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* 경로 별칭을 여기다 넣어야 이상한 경로 오류 빨간줄이 사라진다? */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
+      "@pages/*": ["src/pages/*"],
+      "@types/*": ["src/types/*"],
+      "@recoil/*": ["src/recoil/*"],
+      "@apis/*": ["src/apis/*"]
+    },
+    "noImplicitAny": false,
+    "strictNullChecks": false
   },
   "include": ["src"]
 }
