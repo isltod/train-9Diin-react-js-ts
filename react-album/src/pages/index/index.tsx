@@ -13,19 +13,21 @@ function index() {
 
   // index는 특별하다면서, 소문자로 시작하니 아래 use...훅에서 죄다 빨간줄이다...
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const {imgData, getSearchImgs} = useImgStore();
+  const {imageList, getSearchImages} = useImgStore();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [open, setOpen] = useState(false);
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [imgData, setimgData] = useState<CardDTO>();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    getSearchImgs("Korea", 1);
+    getSearchImages("dogs", 1);
   }, []);
 
   // 애초에 되도않는 recoil 때문에 많이도 돌아왔고...
   // 이 비러먹을 상황 때문에 엄청 고생했다...비동기 처리이므로 imgData && 로 데이터 로딩 이후 처리하도록 한다고...
-  const CARD_LIST = imgData && imgData.map((item: CardDTO) => {
-    return <Card data={item} key={item.id} openDetailDialog={setOpen} />
+  const CARD_LIST = imageList && imageList.map((item: CardDTO) => {
+    return <Card data={item} key={item.id} handleDetailDialog={setOpen} handleSetImage={setimgData} />
   })
 
   return (
@@ -54,7 +56,7 @@ function index() {
       </div>
       {/*공통 푸터 UI 부분*/}
       <CommonFooter/>
-      {open && <DetailDialog/>}
+      {open && <DetailDialog handleDetailDialog={setOpen} data={imgData} />}
     </div>
   )
 }
