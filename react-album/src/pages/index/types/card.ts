@@ -31,7 +31,6 @@ interface Link {
   download_location: string
 }
 
-
 interface URL {
   raw: string
   full: string
@@ -39,4 +38,3 @@ interface URL {
   small: string
   thumb: string
 }
-

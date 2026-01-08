@@ -1,45 +1,27 @@
-import {useEffect, useState} from "react";
 import CommonHeader from '@components/common/header/CommonHeader';
 import CommonSearchBar from "@components/common/searchBar/CommonSearchBar.tsx";
 import CommonNav from "@components/common/navigation/CommonNav.tsx";
 import CommonFooter from "@components/common/footer/CommonFooter.tsx";
-import Card from "@pages/index/components/Cardtsx.tsx";
-import type {CardDTO} from "@pages/index/types/card.ts";
-import axios from "axios";
 import styles from './styles/index.module.scss'
+import useImgStore from "@store/imgStore.ts";
+import {useEffect} from "react";
+import type {CardDTO} from "@pages/index/types/card.ts";
+import Card from "@pages/index/components/Cardtsx.tsx";
 
 function index() {
-  // 1. 이미지 데이터를 미리 설정하고
+
+  // index는 특별하다면서, 소문자로 시작하니 아래 use...훅에서 죄다 빨간줄이다...
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [imgData, setImgData] = useState([]);
+  const {imgData, getSearchImgs} = useImgStore();
 
-  const getData = async () => {
-    const API_URL = "https://api.unsplash.com/search/photos"
-    const API_KEY = "98IZBgfB7oilX6BeswvQeMOQs4YMYbkjgGyOZuHh5ig"
-    const PER_PAGE = 30
-    const SEARCH_STR = "korea"
-    const PAGE = 100
-    try {
-      // 2. 여기서 받는 함수를 설정하고
-      const response =
-        await axios.get(`${API_URL}?query=${SEARCH_STR}&client_id=${API_KEY}&per_page=${PER_PAGE}&page=${PAGE}`)
-      console.log(response)
-      // 2-1. 받으면 이미지 데이터에 넣는 것까지 설정...
-      if (response.status === 200) {
-        setImgData(response.data.results)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  // 3. 실제로 받으라고 명령하고...
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    getData();
+    getSearchImgs("Korea", 1);
   }, []);
 
-  const CARD_LIST = imgData.map((item: CardDTO) => {
+  // 애초에 되도않는 recoil 때문에 많이도 돌아왔고...
+  // 이 비러먹을 상황 때문에 엄청 고생했다...비동기 처리이므로 imgData && 로 데이터 로딩 이후 처리하도록 한다고...
+  const CARD_LIST = imgData && imgData.map((item: CardDTO) => {
     return <Card data={item} key={item.id}/>
   })
 

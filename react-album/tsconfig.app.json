@@ -28,12 +28,13 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@apis/*": ["src/apis/*"],
       "@assets/*": ["src/assets/*"],
       "@components/*": ["src/components/*"],
       "@pages/*": ["src/pages/*"],
-      "@types/*": ["src/types/*"],
       "@recoil/*": ["src/recoil/*"],
-      "@apis/*": ["src/apis/*"]
+      "@store/*": ["src/store/*"],
+      "@types/*": ["src/types/*"],
     },
     "noImplicitAny": false,
     "strictNullChecks": false
