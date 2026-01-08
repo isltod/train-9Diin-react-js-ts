@@ -14,7 +14,7 @@ interface Navigation {
 
 function CommonNav() {
 
-  const [navigation, setNavigation] = useState<Navigation[]>(navJson);
+  const [navigation] = useState<Navigation[]>(navJson);
 
   const navLinks = navigation.map((item: Navigation) => {
     return (
