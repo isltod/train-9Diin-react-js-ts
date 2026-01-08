@@ -4,15 +4,18 @@ import CommonNav from "@components/common/navigation/CommonNav.tsx";
 import CommonFooter from "@components/common/footer/CommonFooter.tsx";
 import styles from './styles/index.module.scss'
 import useImgStore from "@store/imgStore.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import type {CardDTO} from "@pages/index/types/card.ts";
 import Card from "@pages/index/components/Cardtsx.tsx";
+import DetailDialog from "@components/common/dialog/DetailDialog.tsx";
 
 function index() {
 
   // index는 특별하다면서, 소문자로 시작하니 아래 use...훅에서 죄다 빨간줄이다...
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const {imgData, getSearchImgs} = useImgStore();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [open, setOpen] = useState(false);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
@@ -22,7 +25,7 @@ function index() {
   // 애초에 되도않는 recoil 때문에 많이도 돌아왔고...
   // 이 비러먹을 상황 때문에 엄청 고생했다...비동기 처리이므로 imgData && 로 데이터 로딩 이후 처리하도록 한다고...
   const CARD_LIST = imgData && imgData.map((item: CardDTO) => {
-    return <Card data={item} key={item.id}/>
+    return <Card data={item} key={item.id} openDetailDialog={setOpen} />
   })
 
   return (
@@ -51,6 +54,7 @@ function index() {
       </div>
       {/*공통 푸터 UI 부분*/}
       <CommonFooter/>
+      {open && <DetailDialog/>}
     </div>
   )
 }
