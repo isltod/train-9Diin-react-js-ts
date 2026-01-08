@@ -11,7 +11,6 @@ interface Props {
 function Card({data, handleDetailDialog, handleSetImage}: Props) {
 
   const openDialog = () => {
-    console.log(data)
     // 이건 사실상 setOpen에 연결되어 있어서 open state를 true로 변경시켜주는 효과...
     handleDetailDialog(true)
     handleSetImage(data);

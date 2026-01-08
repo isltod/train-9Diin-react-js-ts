@@ -21,7 +21,6 @@ const useImgStore = create<ImageState>((set) => ({
         await axios.get(`${API_URL}?query=${searchStr}&client_id=${API_KEY}&per_page=${PER_PAGE}&page=${pageNum}`)
       // 2-1. 받으면 이미지 데이터에 넣는 것까지 설정...
       if (response.status === 200) {
-        // console.log(response.data);
         set({imageList: response.data.results})
       }
     } catch (error) {
