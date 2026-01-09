@@ -31,8 +31,8 @@ function CommonNav() {
         getSearchImages()
       }
     })
-    // setNavigations([...navigations]);
-  }, [location.pathname]);
+    // 실제 변화 추적은 location.pathname만 하면 되는데, 그렇게 하면 useEffect 안에서 만들지 않은 함수/변수를 쓴다고 경고...
+  }, [location.pathname, getSearchImages, navigations, setPageNumber, setSearchString]);
 
   // 이건 설정된 navigation 값들에 따라 그림만 그려주는 부분이고...
   const navLinks = navigations.map((nav: Navigation) => {
