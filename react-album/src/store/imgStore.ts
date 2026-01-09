@@ -1,4 +1,4 @@
-import { create } from 'zustand';
+import {create} from 'zustand';
 import axios from 'axios';
 
 const API_URL = "https://api.unsplash.com/search/photos"
@@ -12,21 +12,23 @@ interface ImageState {
   pageNumber: number;
   setPageNumber: (value: number) => void;
   getSearchImages: () => Promise<void>;
+  totalImages: number;
+  totalPages: number;
 }
 
-const useImgStore =
-  create<ImageState>(
-    (set, get) => ({
+const useImgStore = create<ImageState>((set, get) => ({
 
   imageList: null,
   searchString: "dogs",
   pageNumber: 1,
+  totalImages: 0,
+  totalPages: 0,
 
-  setSearchString: (value : string) => {
+  setSearchString: (value: string) => {
     set({searchString: value})
   },
 
-  setPageNumber: (value : number) => {
+  setPageNumber: (value: number) => {
     set({pageNumber: value})
   },
 
@@ -41,6 +43,9 @@ const useImgStore =
         await axios.get(`${API_URL}?query=${searchStr}&client_id=${API_KEY}&per_page=${PER_PAGE}&page=${pageNum}`)
       // 받으면 이미지 데이터에 넣는 것까지 설정...
       if (response.status === 200) {
+        // console.log(response.data);
+        set({totalImages: response.data.total})
+        set({totalPages: response.data.total_pages});
         set({imageList: response.data.results})
       }
     } catch (error) {
