@@ -9,22 +9,26 @@ interface Props {
 
 function FooterNav({pages, step, handlePageNavigate}: Props) {
   const {pageNumber} = useImgStore();
+
   const moveToPage = (page : number) => {
     handlePageNavigate(page);
   }
+
+  const pageButtons = pages && pages.map((page: number, i: number) => {
+    const thisPage = step * 10 + page
+    return (
+      <button key={i}
+              className={thisPage === pageNumber ?
+                `${styles.pagination__button} ${styles.active}` :
+                `${styles.pagination__button} ${styles.inactive}`}
+              onClick={() => { moveToPage(thisPage) }}>
+        {page}
+      </button>
+    )
+  })
+
   return (
-    pages && pages.map((page: number, i: number) => {
-      const curPage = step * 10 + page
-      return (
-        <button key={i}
-                className={curPage === pageNumber ?
-                  `${styles.pagination__button} ${styles.active}` :
-                  `${styles.pagination__button} ${styles.inactive}`}
-                onClick={() => { moveToPage(curPage) }}>
-          {page}
-        </button>
-      )
-    })
+    pageButtons
   )
 }
 
