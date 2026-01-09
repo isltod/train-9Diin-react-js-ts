@@ -1,5 +1,10 @@
 import styles from './DetailDialog.module.scss'
 import type {CardDTO} from "@pages/index/types/card.ts";
+import {useEffect, useState} from "react";
+import toast, {toastConfig} from "react-simple-toasts";
+import 'react-simple-toasts/dist/theme/dark-edge.css';
+
+toastConfig({theme: "dark-edge", position: "top-right", duration: 100});
 
 interface Props {
   data: CardDTO;
@@ -10,6 +15,50 @@ function DetailDialog({ data, handleDetailDialog }: Props) {
 
   const closeDialog = () => {
     handleDetailDialog(false);
+  }
+
+  const [bookmarked, setBookmarked] = useState(false);
+
+  const markStatus = (key : string = 'no-key') => {
+    const bookmarks = JSON.parse(localStorage.getItem('bookmark'));
+    if (!bookmarks) {
+      return "null"
+    }
+    if (bookmarks.findIndex((item: CardDTO) => item.id === key) === -1) {
+      return "no"
+    } else {
+      return "yes";
+    }
+  }
+
+  useEffect(() => {
+    // 이것도 엄청 헤맸는데, 단순히 내부에서 함수를 만들고 그 안에서 set 호출을 하라는 얘기...
+    const initMarkStatus = () => {
+      if (markStatus(data.id) === "yes") {
+        setBookmarked(true);
+      }
+    }
+    // 단지 중언부언처럼 보이는데 굳이 이렇게 하라는 데에는 뭔 뜻 있을까...
+    initMarkStatus();
+  }, [])
+
+  const addBookmark = (selected: CardDTO) => {
+    if (bookmarked || markStatus(selected.id) === "yes") {
+      // 뭔가 너무 좌우로 크고 사라지지도 않는 문제가 있는데...해결이 안된다...
+      toast("이미 북마크 된 이미지입니다. ❌");
+      return;
+    }
+    let bookmarks;
+    if (markStatus(selected.id) === "no") {
+      bookmarks = JSON.parse(localStorage.getItem('bookmark'));
+      bookmarks.push(selected);
+    } else {
+      bookmarks = [selected];
+    }
+    localStorage.setItem('bookmark', JSON.stringify(bookmarks));
+    setBookmarked(true)
+    toast("북마크에 추가했습니다. 😄");
+    return;
   }
 
   return (
@@ -25,13 +74,18 @@ function DetailDialog({ data, handleDetailDialog }: Props) {
             <span className={styles.close__authorName}>{data.user.name}</span>
           </div>
           <div className={styles.bookmark}>
-            <button className={styles.bookmark__button}>
+            <button className={styles.bookmark__button} onClick={() => { addBookmark(data) }}>
               {/*구글 아이콘 사용*/}
-              <span className="material-symbols-outlined" style={{fontSize: 16 + 'px'}}>close</span>
+              <span className="material-symbols-outlined"
+                    style={ bookmarked ?
+                      {fontSize: 16 + 'px', color: "red"} :
+                      {fontSize: 16 + 'px'}} >
+                favorite
+              </span>
               북마크
             </button>
             <button className={styles.bookmark__button}>
-              <span className="material-symbols-outlined" style={{fontSize: 16 + 'px'}}>close</span>
+              <span className="material-symbols-outlined" style={{fontSize: 16 + 'px'}}>download</span>
               다운로드
             </button>
           </div>

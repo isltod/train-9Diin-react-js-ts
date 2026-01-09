@@ -30,10 +30,9 @@ function index() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const CARD_LIST = useMemo(() => {
     if (imageList) {
-      const cards = imageList.map((item: CardDTO) => {
+      return imageList.map((item: CardDTO) => {
         return <Card data={item} key={item.id} handleDetailDialog={setOpen} handleSetImage={setimgData} />
       })
-      return cards;
     } else {
       return <Loading />
     }
