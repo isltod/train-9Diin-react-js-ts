@@ -22,7 +22,7 @@ function index() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
-    getSearchImages("dogs", 1);
+    getSearchImages();
   }, []);
 
   // 애초에 되도않는 recoil 때문에 많이도 돌아왔고...

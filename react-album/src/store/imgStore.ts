@@ -7,19 +7,39 @@ const PER_PAGE = 30
 
 interface ImageState {
   imageList: [];
-  getSearchImages: (searchStr: string, pageNum: number) => Promise<void>;
+  searchString: string;
+  setSearchString: (value: string) => void;
+  pageNumber: number;
+  setPageNumber: (value: number) => void;
+  getSearchImages: () => Promise<void>;
 }
 
-const useImgStore = create<ImageState>((set) => ({
+const useImgStore =
+  create<ImageState>(
+    (set, get) => ({
 
   imageList: null,
+  searchString: "dogs",
+  pageNumber: 1,
 
-  getSearchImages: async (searchStr: string, pageNum: number) => {
+  setSearchString: (value : string) => {
+    set({searchString: value})
+  },
+
+  setPageNumber: (value : number) => {
+    set({pageNumber: value})
+  },
+
+  getSearchImages: async () => {
     try {
-      // 2. 여기서 받는 함수를 설정하고
+      // 내부 상태값은 이런 식으로 받아와야 하나보다...
+      const searchStr = get().searchString;
+      const pageNum = get().pageNumber;
+
+      // 데이터 비동기로 받고
       const response =
         await axios.get(`${API_URL}?query=${searchStr}&client_id=${API_KEY}&per_page=${PER_PAGE}&page=${pageNum}`)
-      // 2-1. 받으면 이미지 데이터에 넣는 것까지 설정...
+      // 받으면 이미지 데이터에 넣는 것까지 설정...
       if (response.status === 200) {
         set({imageList: response.data.results})
       }

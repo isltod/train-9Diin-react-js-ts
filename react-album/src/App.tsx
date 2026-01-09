@@ -8,6 +8,7 @@ function App() {
       <Routes>
         {/*이런 모양이 나은건가...*/}
         <Route index path={"/"} element=<MainPage/>/>
+        <Route path={"search/:id"} element={<MainPage/>}/>
         <Route path={"/bookmark"} element={<BookmarkPage/>}/>
       </Routes>
     </BrowserRouter>
