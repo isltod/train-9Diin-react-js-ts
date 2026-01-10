@@ -1,10 +1,12 @@
 import styles from './DetailDialog.module.scss'
 import type {CardDTO} from "@pages/index/types/card.ts";
 import {useEffect, useState} from "react";
-import toast, {toastConfig} from "react-simple-toasts";
-import 'react-simple-toasts/dist/theme/dark-edge.css';
+import 'react-toastify/dist/ReactToastify.css'
+import {toast, toastConfig} from "react-simple-toasts";
+import 'react-simple-toasts/dist/theme/dark.css'
 
-toastConfig({theme: "dark-edge", position: "top-right", duration: 100});
+// 이 toast는 엉망진창...toastify 인가가 좀 나은 거 같긴 한데....
+toastConfig({theme: "dark", duration: 500, maxVisibleToasts: 1});
 
 interface Props {
   data: CardDTO;
@@ -40,6 +42,16 @@ function DetailDialog({ data, handleDetailDialog }: Props) {
     }
     // 단지 중언부언처럼 보이는데 굳이 이렇게 하라는 데에는 뭔 뜻 있을까...
     initMarkStatus();
+
+    // Esc 키 입력했을 때 창 닫기 - 이것도 먼저 함수 만들고, 밖에서 호출하는데 밖은 문서에 등록하는 모양...
+    const onEscKeyDown = (event) => {
+      if (event.key === "Escape") {
+        closeDialog()
+      }
+    }
+    window.addEventListener("keydown", onEscKeyDown);
+    // 근데 이건 왜 또 지운다는 거지? 창이 꺼질 때는 지운다는 건가?
+    return () => {window.removeEventListener("keydown", onEscKeyDown);}
   }, [])
 
   const addBookmark = (selected: CardDTO) => {

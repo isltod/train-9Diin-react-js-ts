@@ -1,3 +1,5 @@
+@use '@assets/styles/main.scss' as *;
+
 $HEADER-HEIGHT: 56px;
 
 .page {
@@ -22,5 +24,19 @@ $HEADER-HEIGHT: 56px;
     gap: 24px;
 
     overflow-y: scroll;
+
+    &__noData {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+      height: 100%;
+
+      font-size: 36px;
+      font-weight: 600;
+
+      color: $color-gray-300;
+    }
   }
 }
