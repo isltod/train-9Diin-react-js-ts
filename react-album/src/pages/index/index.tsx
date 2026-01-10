@@ -14,7 +14,7 @@ function index() {
 
   // index는 특별하다면서, 소문자로 시작하니 아래 use...훅에서 죄다 빨간줄이다...
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const {imageList, getSearchImages} = useImgStore();
+  const {imageList, getSearchImages, isLoading} = useImgStore();
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [open, setOpen] = useState(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -29,14 +29,16 @@ function index() {
   // 이 비러먹을 상황 때문에 엄청 고생했다...비동기 처리이므로 imgData && 로 데이터 로딩 이후 처리하도록 한다고...
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const CARD_LIST = useMemo(() => {
+    if (isLoading) {
+      // 뭔가 리코일과 달라서 그런지...여기서 로딩 화면 표시는 실패...
+      return <Loading />
+    }
     if (imageList) {
       return imageList.map((item: CardDTO) => {
         return <Card data={item} key={item.id} handleDetailDialog={setOpen} handleSetImage={setimgData} />
       })
-    } else {
-      return <Loading />
     }
-  }, [imageList]);
+  }, [imageList, isLoading]);
 
 
   return (

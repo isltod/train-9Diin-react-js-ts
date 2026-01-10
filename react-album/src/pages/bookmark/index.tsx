@@ -27,11 +27,10 @@ function index() {
       {/*공통 헤더 UI 부분*/}
       <CommonHeader />
       <main className={styles.page__contents}>
-        {bookmarks.map((imgData : CardDTO) => {
-          return (
-            <Card imgData={imgData} key={imgData.id} />
-          )
-        })}
+        {bookmarks.length > 0 ?
+          bookmarks.map((imgData : CardDTO) => {return (<Card imgData={imgData} key={imgData.id} />)}) :
+          <div className={styles.page__contents__noData}>북마크된 이미지가 없습니다.</div>
+        }
       </main>
     </div>
   )

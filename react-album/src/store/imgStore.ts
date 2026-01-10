@@ -14,6 +14,7 @@ interface ImageState {
   getSearchImages: () => Promise<void>;
   totalImages: number;
   totalPages: number;
+  isLoading: boolean,
 }
 
 const useImgStore = create<ImageState>((set, get) => ({
@@ -24,6 +25,9 @@ const useImgStore = create<ImageState>((set, get) => ({
   totalImages: 0,
   totalPages: 0,
 
+  // 비동기 로딩 지연 관련
+  isLoading: true,
+
   setSearchString: (value: string) => {
     set({searchString: value})
   },
@@ -33,7 +37,9 @@ const useImgStore = create<ImageState>((set, get) => ({
   },
 
   getSearchImages: async () => {
+    set({isLoading: true})
     try {
+      // 로딩 상태 표시
       // 내부 상태값은 이런 식으로 받아와야 하나보다...
       const searchStr = get().searchString;
       const pageNum = get().pageNumber;
@@ -44,13 +50,16 @@ const useImgStore = create<ImageState>((set, get) => ({
       // 받으면 이미지 데이터에 넣는 것까지 설정...
       if (response.status === 200) {
         // console.log(response.data);
-        set({totalImages: response.data.total})
-        set({totalPages: response.data.total_pages});
-        set({imageList: response.data.results})
+        set({
+          totalImages: response.data.total,
+          totalPages: response.data.total_pages,
+          imageList: response.data.results,
+        })
       }
     } catch (error) {
       console.log(error)
     }
+    set({isLoading: false})
   },
 }));
 
