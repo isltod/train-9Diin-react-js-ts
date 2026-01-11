@@ -1,4 +1,8 @@
 export { Button, buttonVariants } from "./ui/button"
+export { Input } from "./ui/input"
+export { Label } from "./ui/label"
+export {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrollDownButton, SelectScrollUpButton,
+  SelectSeparator, SelectTrigger,SelectValue} from "./ui/select"
 export {Separator} from "./ui/separator"
 export {Skeleton} from "./ui/skeleton";
 
