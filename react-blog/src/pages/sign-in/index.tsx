@@ -31,7 +31,7 @@ export default function SignIn() {
     <main className="h-full min-h-[720px] flex justify-center items-center">
       <div className="w-100 flex flex-col gap-6 p-6">
         <div>
-          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">회원가입</h4>
+          <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">로그인</h4>
           <p className="text-muted-foreground">로그인을 위한 정보를 입력해주세요.</p>
         </div>
         <div className="grid gap-3">
@@ -48,7 +48,7 @@ export default function SignIn() {
           </div>
           {/* 로그인 폼 */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
@@ -77,9 +77,9 @@ export default function SignIn() {
               />
               <div className="flex flex-col gap-3">
                 <Button type="submit">로그인</Button>
-                <div className="text-center">
+                <div className="flex justify-between">
                   계정이 없으신가요?
-                  <NavLink to={"sign-up"} className="underline ml-3.5">회원 가입</NavLink>
+                  <NavLink to={"/sign-up"} className="underline ml-3.5">회원 가입</NavLink>
                 </div>
               </div>
             </form>

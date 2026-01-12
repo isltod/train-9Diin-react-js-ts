@@ -1,4 +1,5 @@
 export {Button, buttonVariants} from "./ui/button"
+export { Checkbox } from "./ui/checkbox"
 export {useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField,} from "./ui/form"
 export {Input} from "./ui/input"
 export {Label} from "./ui/label"
