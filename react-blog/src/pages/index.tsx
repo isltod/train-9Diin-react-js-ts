@@ -41,7 +41,7 @@ export default function Index() {
         <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
-              <img src="/roasted-turkey_13373187.png" alt="@IMG" className="w-7 h-7"/>
+              <img src="/champagne_13374532.png" alt="@IMG" className="w-7 h-7"/>
               <h4 className="md:text-base text-muted-foreground">
                 새로운 시선으로 새로운 이야기를 시작하세요.
               </h4>
