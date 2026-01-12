@@ -1,13 +1,22 @@
 import {Separator} from "@/components";
 import {NavLink, useNavigate} from 'react-router'
 import {useAuthStore} from '@/stores'
+import {toast} from 'sonner'
 
 export function AppHeader() {
 
   const navigate = useNavigate();
-  const {email, resetAuth} = useAuthStore()
+  const {user, resetAuth} = useAuthStore()
 
-  const handleLogout = () => { resetAuth() }
+  const handleLogout = async () => {
+    try {
+      await resetAuth()
+      toast.success("로그아웃 되었습니다.")
+    } catch (error) {
+      console.error(error)
+      toast.error("로그아웃 중 예외가 발생했습니다.")
+    }
+  }
 
   return (
     <header className="fixed top-0 z-20 w-full flex items-center justify-center bg-stone-800">
@@ -25,9 +34,9 @@ export function AppHeader() {
           </div>
         </div>
         {/*로그인 UI*/}
-        {email ? (
+        {user ? (
           <div className="flex items-center gap-5">
-            <span>{email}</span>
+            <span>{user.email}</span>
             <Separator orientation="vertical" className="!h-4"/>
             <span className="cursor-pointer" onClick={handleLogout}>로그아웃</span>
           </div>
