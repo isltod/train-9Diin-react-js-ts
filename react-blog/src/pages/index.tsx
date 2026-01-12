@@ -10,7 +10,7 @@ export default function Index() {
     <main className="w-full h-full min-h-[720px] flex p-6 gap-6">
       <div className="fixed right-1/2 translate-1/2 bottom-10 z-20">
         <Button variant="destructive" className="!py-5 !px-6 rounded-full"
-                onClick={() => { navigate("topics/create") }}>
+                onClick={() => { navigate("/topics/create") }}>
           <PencilLine/>
           나만의 토픽 작성
         </Button>

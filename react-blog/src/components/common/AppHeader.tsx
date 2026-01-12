@@ -19,7 +19,7 @@ export function AppHeader() {
           </div>
         </div>
         {/*로그인 UI*/}
-        <NavLink to={"sign-in"}>로그인</NavLink>
+        <NavLink to={"/sign-in"}>로그인</NavLink>
       </div>
     </header>
   )
