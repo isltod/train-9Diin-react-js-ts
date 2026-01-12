@@ -5,6 +5,7 @@ import {useForm} from 'react-hook-form'
 import {NavLink, useNavigate} from 'react-router'
 import supabase from '@/lib/supabase.ts'
 import {toast} from 'sonner'
+import {useAuthStore} from '@/stores'
 
 const formSchema = z.object({
   email: z.email({
@@ -18,6 +19,7 @@ const formSchema = z.object({
 export default function SignIn() {
 
   const navigate = useNavigate()
+  const {setId, setEmail, setRole, email} = useAuthStore()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -45,7 +47,11 @@ export default function SignIn() {
 
       // 여기 왔다는 것은 일단 사용자 등록에 성공해서 data를 받았다는 얘기...근데 여기서 data를 또 확인해야 하나?
       if (user && session) {
-        // user와 session을 이용해서 로그인 후 처리 필요...
+        // user와 session을 이용해서 로그인 후 처리...
+        setId(user.id)
+        setEmail(user.email)
+        setRole(user.role)
+
         toast.success("로그인에 성공했습니다.")
         navigate("/")
       }
