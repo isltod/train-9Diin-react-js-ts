@@ -7,6 +7,7 @@ export {Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectScrol
   SelectSeparator, SelectTrigger,SelectValue} from "./ui/select"
 export {Separator} from "./ui/separator"
 export {Skeleton} from "./ui/skeleton";
+export {Toaster} from "./ui/sonner"
 
 export {SkeletonHotTopic} from "./skeleton/hot-topic"
 export {SkeletonNewTopic} from "./skeleton/new-topic"

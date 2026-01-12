@@ -9,6 +9,7 @@ import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import RootLayout from "@/pages/layout.tsx";
 import CreateTopic from '@/pages/topics/create.tsx'
+import {Toaster} from '@/components'
 
 // 여전히 index.html -> main.tsx가 실행되고, 여기서 createRoot가 App을 만들어 반환...
 // 단지 전에는 단순하게 App만 반환했는데, 이제는 라우터가 반환되는 형식...
@@ -27,6 +28,7 @@ createRoot(document.getElementById('root')!).render(
           </Route>
         </Routes>
       </BrowserRouter>
+      <Toaster richColors position="top-center"/>
     </ThemeProvider>
   </StrictMode>,
 )
