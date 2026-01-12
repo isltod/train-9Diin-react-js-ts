@@ -13,10 +13,12 @@ import {
   Label,
   Separator
 } from '@/components'
-import {NavLink} from 'react-router'
+import {NavLink, useNavigate} from 'react-router'
 import {z} from 'zod'
 import {useState} from 'react'
 import {ArrowLeft, Asterisk, ChevronRight} from 'lucide-react'
+import {toast} from 'sonner'
+import supabase from '@/lib/supabase.ts'
 
 const formSchema = z.object({
   email: z.email({
@@ -41,14 +43,7 @@ const formSchema = z.object({
 
 export default function SignUp() {
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
-  })
+  const navigate = useNavigate()
 
   const [serviceAgreed, setServiceAgreed] = useState<boolean>(false)
   const [privacyAgreed, setPrivacyAgreed] = useState<boolean>(false)
@@ -58,8 +53,49 @@ export default function SignUp() {
   const handleCheckPrivacy = () => setPrivacyAgreed(!privacyAgreed)
   const handleCheckMarketing = () => setMarketingAgreed(!marketingAgreed)
 
-  const onSubmit = () => {
-    console.log("로그인 버튼 클릭...")
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  })
+
+  const onSubmit = async (formData : z.infer<typeof formSchema>) => {
+    console.log("회원 가입 버튼 클릭...")
+
+    // 0단계: 폼 자체에서 이메일, 비밀번호 형식 확인
+    // 1단계: 필수 동의 항목 확인
+    if (!serviceAgreed || !privacyAgreed) {
+      toast.warning("필수 항목은 동의 되어야 합니다.")
+      return
+    }
+    
+    try {
+      // 3단계: 폼에 입력된 이메일, 암호로 supabase에 등록 시도
+      const { data, error } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+      })
+
+      // 여기 error는 supabase에서 생긴 오류
+      if (error) {
+        toast.error(error.message)
+        return
+      }
+
+      // 여기 왔다는 것은 일단 사용자 등록에 성공해서 data를 받았다는 얘기...근데 여기서 data를 또 확인해야 하나?
+      if (data) {
+        toast.success("사용자 등록에 성공했습니다.")
+        navigate("/sign-in")
+      }
+
+    // 여기 appError는 이 앱 실행 중 생긴 오류...
+    } catch (appError) {
+      console.log(appError)
+      throw new Error(`${appError}`)
+    }
   }
 
   return (
@@ -93,7 +129,7 @@ export default function SignUp() {
                   <FormItem>
                     <FormLabel>비밀번호</FormLabel>
                     <FormControl>
-                      <Input placeholder="비밀번호를 입력하세요." {...field} />
+                      <Input type="password" placeholder="비밀번호를 입력하세요." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -106,7 +142,7 @@ export default function SignUp() {
                   <FormItem>
                     <FormLabel>비밀번호 확인</FormLabel>
                     <FormControl>
-                      <Input placeholder="비밀번호 확인을 입력하세요." {...field} />
+                      <Input type="password" placeholder="비밀번호 확인을 입력하세요." {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
