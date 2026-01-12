@@ -1,23 +1,32 @@
-import {create} from 'zustand/react'
+import {create} from 'zustand'
+import {persist} from 'zustand/middleware'
+import supabase from '@/lib/supabase'
 
-interface AuthStore {
+interface User {
   id: string;
   email: string;
   role: string;
+}
 
-  setId: (id: string) => void;
-  setEmail: (email: string) => void;
-  setRole: (email: string) => void;
+interface AuthStore {
+  user: User | null;
+  setUser: (user: User) => void;
   resetAuth: () => void;
 }
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  id: "",
-  email: "",
-  role: "",
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+        user: null,
 
-  setId: (value) => set({ id: value }),
-  setEmail: (value) => set({ email: value }),
-  setRole: (value) => set({ role: value }),
-  resetAuth: () => set({ id: "", email: "", role: "" }),
-}));
+        setUser: (user: User) => set({user: user}),
+        resetAuth: async () => {
+          await supabase.auth.signOut()
+          // 이게 왜 그런지 모르겠는데...필요없어보이는 이 코드가 없으면 로그아웃 후 화면 갱신이 안된다...
+          set({user: null})
+          localStorage.removeItem("AuthStore")
+        },
+      }
+    ), {name: "AuthStore"}
+  )
+);
