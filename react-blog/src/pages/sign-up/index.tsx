@@ -74,7 +74,7 @@ export default function SignUp() {
     
     try {
       // 3단계: 폼에 입력된 이메일, 암호로 supabase에 등록 시도
-      const { data, error } = await supabase.auth.signUp({
+      const { data: {user, session}, error } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
       })
@@ -86,9 +86,27 @@ export default function SignUp() {
       }
 
       // 여기 왔다는 것은 일단 사용자 등록에 성공해서 data를 받았다는 얘기...근데 여기서 data를 또 확인해야 하나?
-      if (data) {
-        toast.success("사용자 등록에 성공했습니다.")
-        navigate("/sign-in")
+      if (user && session) {
+        // 여기서는 확장 테이블에 속성 넣는 결과인데...
+        // 이렇게 하면 트랜잭션이 문제가 되지 않나? 두번에 걸쳐 user를 만드는데...
+        const { data, error } = await supabase
+          .from('users')
+          .insert([
+            { id: user.id, service_agreed: serviceAgreed, privacy_agreed: privacyAgreed,
+              marketing_agreed: marketingAgreed },
+          ])
+          .select()
+
+        // 이건 확장 테이블에 오류인데...이게 난다면 정말 트랜잭션 문제가...
+        if (error) {
+          toast.error(error.message)
+          return
+        }
+
+        if (data) {
+          toast.success("사용자 등록에 성공했습니다.")
+          navigate("/sign-in")
+        }
       }
 
     // 여기 appError는 이 앱 실행 중 생긴 오류...
