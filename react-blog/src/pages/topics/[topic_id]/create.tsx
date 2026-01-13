@@ -16,13 +16,14 @@ import {toast} from 'sonner'
 import type {Block} from '@blocknote/core'
 import supabase from '@/lib/supabase.ts'
 import {useAuthStore} from '@/stores'
-import {useParams} from 'react-router'
+import {useNavigate, useParams} from 'react-router'
 import {nanoid} from 'nanoid'
 import {TOPIC_STATUS} from '@/types/topic.type.ts'
 
 export default function CreateTopic() {
 
   const {user} = useAuthStore()
+  const navigate = useNavigate()
   const params = useParams()
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<Block[]>([])
@@ -30,6 +31,13 @@ export default function CreateTopic() {
   const [thumbnail, setThumbnail] = useState<File | string | null>(null)
 
   const handleSave = async () => {
+
+    if (!user) {
+      toast.error("토픽 작성은 로그인 후에 가능합니다.")
+      navigate("/sign-in")
+      return
+    }
+
     if (!title && !content && !category && !thumbnail) {
       toast.warning("토픽에 제목, 본문, 분류, 썸네일 등 아무것도 정하지 않았습니다.")
       return
@@ -71,7 +79,7 @@ export default function CreateTopic() {
     const { data, error } = await supabase
       .from('topics')
       .update({
-        author: user?.id,
+        author: user.id,
         title,
         content: JSON.stringify(content),
         category,
