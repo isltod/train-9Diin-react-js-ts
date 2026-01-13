@@ -1,5 +1,5 @@
 import {
-  AppEditor,
+  AppEditor, AppFileUpload,
   Button,
   Input,
   Label,
@@ -8,7 +8,6 @@ import {
   SelectGroup, SelectItem, SelectLabel,
   SelectTrigger,
   SelectValue,
-  Skeleton
 } from '@/components'
 import {ArrowLeft, Asterisk, BookOpenCheck, ImageOff, Save} from 'lucide-react'
 import {TOPIC_CATEGORIES} from '@/constants/category.constant.tsx'
@@ -18,6 +17,8 @@ import type {Block} from '@blocknote/core'
 import supabase from '@/lib/supabase.ts'
 import {useAuthStore} from '@/stores'
 import {useParams} from 'react-router'
+import {nanoid} from 'nanoid'
+import {TOPIC_STATUS} from '@/types/topic.type.ts'
 
 export default function CreateTopic() {
 
@@ -26,7 +27,7 @@ export default function CreateTopic() {
   const [title, setTitle] = useState<string>('')
   const [content, setContent] = useState<Block[]>([])
   const [category, setCategory] = useState<string>('')
-  const [thumbnail, setThumbnail] = useState<string>('')
+  const [thumbnail, setThumbnail] = useState<File | string | null>(null)
 
   const handleSave = async () => {
     if (!title && !content && !category && !thumbnail) {
@@ -34,12 +35,49 @@ export default function CreateTopic() {
       return
     }
 
-    // 뭔가 썸네일 처리해야 하고...
-    setThumbnail("")
+    // 썸네일 처리
+    let thumbnailUrl: string | null = null
+
+    if (thumbnail) {
+      // 일단 썸네일이 파일이면 새로 저장이므로
+      if (thumbnail instanceof File) {
+        // 1. 겹치지 않는 파일 경로 만들고
+        const extension = thumbnail.name.split('.')[1]
+        const fileName = `${nanoid()}.${extension}`
+        const filePath = `topics/${fileName}`
+
+        // 2. bucket에 올리고
+        const {error: uploadError} = await supabase.storage.from("react-blog").upload(filePath, thumbnail)
+        if (uploadError) {
+          toast.error(uploadError.message)
+          throw uploadError
+        }
+
+        // 3. 그 URL을 받아둔다
+        const {data} = await supabase.storage.from("react-blog").getPublicUrl(filePath)
+        if (!data) {
+          const message = "썸네일의 Public URL 조회에 실패했습니다."
+          toast.error(message)
+          throw new Error(message)
+        }
+
+        thumbnailUrl = data.publicUrl
+      } else {
+        // 문자열이면 기존 이미지 경로를 유지한다...
+        thumbnailUrl = thumbnail
+      }
+    }
 
     const { data, error } = await supabase
       .from('topics')
-      .update({ author: user?.id, title, content, thumbnail, category })
+      .update({
+        author: user?.id,
+        title,
+        content: JSON.stringify(content),
+        category,
+        thumbnail: thumbnailUrl,
+        status: TOPIC_STATUS.TEMP
+      })
       .eq("id", params.id)
       .select()
 
@@ -123,8 +161,9 @@ export default function CreateTopic() {
             <Asterisk size={14} className="text-[#F96859]"/>
             <Label className="text-muted-foreground">썸네일</Label>
           </div>
-          <Skeleton className="w-full aspect-video" />
-          <Button variant="outline" className="border-0">
+          {/* <Skeleton className="w-full aspect-video" /> */}
+          <AppFileUpload thumbnail={thumbnail} setThumbnail={setThumbnail}/>
+          <Button variant="outline" className="border-0" onClick={() => { setThumbnail(null) }}>
             <ImageOff/>썸네일 제거
           </Button>
         </div>
