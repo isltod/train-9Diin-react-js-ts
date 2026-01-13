@@ -1,4 +1,5 @@
 import {
+  AppEditor,
   Button,
   Input,
   Label,
@@ -44,7 +45,9 @@ export default function CreateTopic() {
             <Asterisk size={14} className="text-[#F96859]"/>
             <Label className="text-muted-foreground">본문</Label>
           </div>
-          <Skeleton className="w-full h-100" />
+          {/* <Skeleton className="w-full h-100" /> */}
+          {/* BlockNote Editor */}
+          <AppEditor/>
         </div>
       </section>
       {/* 카테고리와 썸네일 등록 */}
