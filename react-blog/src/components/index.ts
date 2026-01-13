@@ -13,6 +13,7 @@ export {SkeletonHotTopic} from "./skeleton/hot-topic"
 export {SkeletonNewTopic} from "./skeleton/new-topic"
 
 export {AppEditor} from "./common/AppEditor"
+export {AppFileUpload} from "./common/AppFileUpload"
 export {AppFooter} from "./common/AppFooter"
 export {AppHeader} from "./common/AppHeader"
 export {AppSidebar} from "./common/AppSidebar"
