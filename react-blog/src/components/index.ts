@@ -12,6 +12,7 @@ export {Toaster} from "./ui/sonner"
 export {SkeletonHotTopic} from "./skeleton/hot-topic"
 export {SkeletonNewTopic} from "./skeleton/new-topic"
 
+export {AppEditor} from "./common/AppEditor"
+export {AppFooter} from "./common/AppFooter"
 export {AppHeader} from "./common/AppHeader"
 export {AppSidebar} from "./common/AppSidebar"
-export {AppFooter} from "./common/AppFooter"

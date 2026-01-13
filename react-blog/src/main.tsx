@@ -8,7 +8,7 @@ import App from "./pages"
 import SignIn from "./pages/sign-in";
 import SignUp from "./pages/sign-up";
 import RootLayout from "@/pages/layout.tsx";
-import CreateTopic from '@/pages/topics/create.tsx'
+import CreateTopic from '@/pages/topics/[topic_id]/create.tsx'
 import {Toaster} from '@/components'
 
 // 여전히 index.html -> main.tsx가 실행되고, 여기서 createRoot가 App을 만들어 반환...
@@ -24,7 +24,7 @@ createRoot(document.getElementById('root')!).render(
             <Route index element={<App/>}/>
             <Route path="sign-in" element={<SignIn/>}/>
             <Route path="sign-up" element={<SignUp/>}/>
-            <Route path="topics/create" element={<CreateTopic/>}/>
+            <Route path="topics/:id/create" element={<CreateTopic/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
