@@ -1,6 +1,6 @@
 import {AppDraftsDialog, AppSidebar, Button, NewTopicCard, SkeletonHotTopic} from "@/components";
 import {CircleSmall, NotebookPen, PencilLine} from "lucide-react";
-import {useNavigate} from 'react-router'
+import {useNavigate, useSearchParams} from 'react-router'
 import {useAuthStore} from '@/stores'
 import {toast} from 'sonner'
 import supabase from '@/lib/supabase.ts'
@@ -12,14 +12,21 @@ export default function Index() {
   const navigate = useNavigate();
   const {user} = useAuthStore()
   const [topics, setTopics] = useState<Topic[]>([])
+  const [searchParams, setSearchParams] = useSearchParams()
+  const category = searchParams.get('category') || ""
 
   useEffect(() => {
     const getTopics = async () => {
       try {
-        const {data, error} = await supabase
+        const query = supabase
           .from("topics")
           .select("*")
           .eq("status", TOPIC_STATUS.PUBLISH)
+
+        if (category && category.trim() !== "") {
+          query.eq("category", category)
+        }
+        const {data, error} = await query
 
         if (error) {
           toast.error(error.message)
@@ -37,7 +44,18 @@ export default function Index() {
     }
 
     getTopics()
-  }, [])
+  }, [category])
+
+  const handleCategory = (newCategory : string) => {
+    // 새로 선택한 범주가 기존과 같으면 아무것도 안함
+    if (newCategory === category) return
+    // searchParam에 넣고 -> 그게 위에 get으로 category에 들어가고 -> useEffect에서 다시 부르고...
+    if (newCategory === "") {
+      setSearchParams({})
+    } else {
+      setSearchParams({category: newCategory})
+    }
+  }
 
   const handleCreateTopic = async () => {
     if (!user || !user.email) {
@@ -81,7 +99,7 @@ export default function Index() {
         </AppDraftsDialog>
       </div>
       {/*카테고리 사이드바*/}
-      <AppSidebar />
+      <AppSidebar category={category} setCategory={handleCategory} />
       {/*토픽 콘텐츠*/}
       <section className="flex-1 flex flex-col gap-12">
         {/*핫 토픽*/}

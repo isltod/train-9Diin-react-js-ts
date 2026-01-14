@@ -90,8 +90,9 @@ export function TopicDetail() {
           {/* 작성자한테만 보이도록 */}
           {author === user?.id && (
             <AlertDialog>
-              <AlertDialogTrigger>
-                <Button variant="outline" size="icon" className="bg-red-500/50">
+              {/* 아래 asChild 속성 안 붙이면 버튼 안에 버튼 있다는 오류가 뜬다... */}
+              <AlertDialogTrigger asChild>
+                <Button variant="outline" size="icon" className="!bg-red-500/50">
                   <Trash/>
                 </Button>
               </AlertDialogTrigger>
@@ -105,7 +106,7 @@ export function TopicDetail() {
                 <AlertDialogFooter>
                   <AlertDialogCancel>닫기</AlertDialogCancel>
                   <AlertDialogAction
-                    className="bg-red-700/50 text-foreground hover:bg-red-600"
+                    className="bg-red-700/50 text-foreground hover:bg-red-600/50"
                     onClick={() => handleDelete()}>
                     삭제
                   </AlertDialogAction>

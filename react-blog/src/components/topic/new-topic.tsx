@@ -54,7 +54,7 @@ export function NewTopicCard({ topic }: Props) {
   const navigate = useNavigate()
 
   return (
-    <Card className="p-4 cursor-pointer" onClick={() => { navigate(`/topics/${topic.id}/detail`) }}>
+    <Card className="h-fit p-4 cursor-pointer" onClick={() => { navigate(`/topics/${topic.id}/detail`) }}>
       <div className="flex justify-between gap-6">
         <div className="flex flex-col gap-4">
           <h3 className="h-16 text-base font-semibold tracking-tight line-clamp-2">
