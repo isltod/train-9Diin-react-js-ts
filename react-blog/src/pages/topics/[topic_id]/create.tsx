@@ -11,7 +11,7 @@ import {
 } from '@/components'
 import {ArrowLeft, Asterisk, BookOpenCheck, ImageOff, Save} from 'lucide-react'
 import {TOPIC_CATEGORIES} from '@/constants/category.constant.tsx'
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {toast} from 'sonner'
 import type {Block} from '@blocknote/core'
 import supabase from '@/lib/supabase.ts'
@@ -30,7 +30,36 @@ export default function CreateTopic() {
   const [category, setCategory] = useState<string>('')
   const [thumbnail, setThumbnail] = useState<File | string | null>(null)
 
-  const handleSave = async () => {
+  // 원래는 선택된 글이 있으면 그걸 props로 넘겨받아서 하는게 맞을텐데...
+  // 이러면 새 글 작성할 때도 쓸데 없이 서버에 질의하게 되는데...
+  useEffect(() => {
+    const getTopic = async () => {
+      try {
+        const {data, error} = await supabase.from('topics').select("*").eq("id", params.id)
+
+        if (error) {
+          toast.error(error.message)
+          return
+        }
+
+        // 데이터 받았으면...
+        if (data) {
+          const topic = data[0]
+          setTitle(topic.title)
+          setContent(JSON.parse(topic.content))
+          setCategory(topic.category)
+          setThumbnail(topic.thumbnail)
+        }
+      } catch (error) {
+        console.log(error)
+        throw error
+      }
+    }
+
+    getTopic()
+  }, [])
+
+  const handleUpdate = async (option : string) => {
 
     if (!user) {
       toast.error("토픽 작성은 로그인 후에 가능합니다.")
@@ -84,7 +113,7 @@ export default function CreateTopic() {
         content: JSON.stringify(content),
         category,
         thumbnail: thumbnailUrl,
-        status: TOPIC_STATUS.TEMP
+        status: option
       })
       .eq("id", params.id)
       .select()
@@ -95,20 +124,27 @@ export default function CreateTopic() {
     }
 
     if (data) {
-      toast.success("토픽을 저장했습니다.")
+      if (option === TOPIC_STATUS.TEMP) {
+        toast.success("토픽을 저장했습니다.")
+      } else {
+        toast.success("토픽을 발행했습니다.")
+        navigate("/")
+      }
     }
   }
 
   return (
     <main className="w-full h-full min-h-[1024px] flex gap-6 p-6">
       <div className="fixed right-1/2 translate-x-1/2 bottom-10 z-20 flex  gap-2">
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" onClick={() => navigate("/") }>
           <ArrowLeft/>
         </Button>
-        <Button variant="outline" className="w-22 !bg-yellow-800/50" onClick={handleSave}>
+        <Button variant="outline" className="w-22 !bg-yellow-800/50"
+                onClick={() => { handleUpdate(TOPIC_STATUS.TEMP) }}>
           <Save/>저장
         </Button>
-        <Button variant="outline" className="w-22 !bg-emerald-800/50">
+        <Button variant="outline" className="w-22 !bg-emerald-800/50"
+                onClick={() => { handleUpdate(TOPIC_STATUS.PUBLISH) }}>
           <BookOpenCheck/>발행
         </Button>
       </div>
@@ -134,7 +170,7 @@ export default function CreateTopic() {
           </div>
           {/* <Skeleton className="w-full h-100" /> */}
           {/* BlockNote Editor */}
-          <AppEditor setContent={setContent}/>
+          <AppEditor content={content} setContent={setContent}/>
         </div>
       </section>
       {/* 카테고리와 썸네일 등록 */}

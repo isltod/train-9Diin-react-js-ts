@@ -76,8 +76,10 @@ export function AppDraftsDialog({ children }: Props) {
             <div className="h-80 overflow-y-scroll flex flex-col gap-3">
               {topics.map((topic : Topic, index: number) => {
                 return (
+                  // 원래는 그냥 navigate 시키는게 아니라, 여기 topic을 위에 index로 넘기고,
+                  // 거기서 props로 create로 넘겨서 편집하게 하는게 맞을거 같은데...일단 단순하게 처리한다...
                   <div className="flex justify-between items-center cursor-pointer py-2 px-4 rounded-md bg-card/50"
-                       onClick={() => { navigate(`/topics/${topic.id}/create`) }}>
+                       onClick={() => { navigate(`/topics/${topic.id}/create`) }} key={index}>
                     <div className="flex gap-2 py-2">
                       <Badge className="w-5 h-5 mt-1.5 rounded-sm aspect-square text-foreground bg-[#E26F24]">
                         {index + 1}
