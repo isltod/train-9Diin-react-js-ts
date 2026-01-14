@@ -1,14 +1,43 @@
-import {AppDraftsDialog, AppSidebar, Button, SkeletonHotTopic, SkeletonNewTopic} from "@/components";
+import {AppDraftsDialog, AppSidebar, Button, NewTopicCard, SkeletonHotTopic} from "@/components";
 import {CircleSmall, NotebookPen, PencilLine} from "lucide-react";
 import {useNavigate} from 'react-router'
 import {useAuthStore} from '@/stores'
 import {toast} from 'sonner'
 import supabase from '@/lib/supabase.ts'
+import {useEffect, useState} from 'react'
+import {type Topic, TOPIC_STATUS} from '@/types/topic.type.ts'
 
 export default function Index() {
 
   const navigate = useNavigate();
   const {user} = useAuthStore()
+  const [topics, setTopics] = useState<Topic[]>([])
+
+  useEffect(() => {
+    const getTopics = async () => {
+      try {
+        const {data, error} = await supabase
+          .from("topics")
+          .select("*")
+          .eq("status", TOPIC_STATUS.PUBLISH)
+
+        if (error) {
+          toast.error(error.message)
+          return;
+        };
+
+        if (data) {
+          setTopics(data)
+        }
+
+      } catch (AppError) {
+        console.log(AppError)
+        throw AppError;
+      }
+    }
+
+    getTopics()
+  }, [])
 
   const handleCreateTopic = async () => {
     if (!user || !user.email) {
@@ -83,13 +112,20 @@ export default function Index() {
               </h4>
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            {/* 이게 대충 모양만 만들어서 번뜩거리는 모양이네... */}
-            <SkeletonNewTopic/>
-            <SkeletonNewTopic/>
-            <SkeletonNewTopic/>
-            <SkeletonNewTopic/>
-          </div>
+          {/* 이게 대충 모양만 만들어서 번뜩거리는 모양이네... */}
+          {topics.length > 0 ? (
+            <div className="flex flex-col min-h-120 md:grid md:grid-cols-2 gap-6">
+              {topics.map(topic  => {
+                return (
+                  <NewTopicCard key={topic.id} topic={topic} />
+                )
+              })}
+            </div>
+          ) : (
+            <div className="min-h-[120px] flex items-center justify-center">
+              <p className="text-muted-foreground">조회 가능한 토픽이 없습니다.</p>
+            </div>
+          )}
         </div>
       </section>
     </main>

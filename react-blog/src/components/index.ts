@@ -1,5 +1,6 @@
 export {Badge, badgeVariants} from "./ui/badge"
 export {Button, buttonVariants} from "./ui/button"
+export {Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent} from "./ui/card"
 export {Checkbox} from "./ui/checkbox"
 export {Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogOverlay,
   DialogPortal, DialogTitle, DialogTrigger} from "./ui/dialog"
@@ -21,3 +22,4 @@ export {AppFileUpload} from "./common/AppFileUpload"
 export {AppFooter} from "./common/AppFooter"
 export {AppHeader} from "./common/AppHeader"
 export {AppSidebar} from "./common/AppSidebar"
+export {NewTopicCard} from "./topic/new-topic"
