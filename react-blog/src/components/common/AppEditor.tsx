@@ -8,17 +8,38 @@ import "@blocknote/core/fonts/inter.css";
 import {ko} from '@blocknote/core/locales'
 import type {Block} from '@blocknote/core'
 import {useEffect} from 'react'
+import {nanoid} from 'nanoid'
 
 interface Props {
   content?: Block[]
-  setContent: (content: Block[]) => void
+  setContent?: (content: Block[]) => void
+  readonly?: boolean
 }
 
-export function AppEditor({content, setContent}: Props) {
+export function AppEditor({content, setContent, readonly}: Props) {
   const locale = ko;
 
   // Create a new editor instance
   const editor = useCreateBlockNote({
+    // 뭔가 값을 받으면 그걸 초기값으로 만들어주나? 아니면 빈 문서 만들고?
+    initialContent: content && content.length > 0 ? (
+      content
+    ) : [
+      {
+        id: nanoid(),
+        type: 'paragraph',
+        props: {
+          textAlignment: 'left',
+          textColor: 'default',
+          backgroundColor: 'default',
+        },
+        content: [
+          {type: "text", text: "", styles: {}}
+        ],
+        children: [],
+      },
+    ],
+
     dictionary: {
       ...locale,
       placeholders: {
@@ -43,5 +64,16 @@ export function AppEditor({content, setContent}: Props) {
 
 
   // Render the editor
-  return <BlockNoteView editor={editor} onChange={() => setContent(editor.document)} />;
+  return (
+    <BlockNoteView
+      editor={editor}
+      editable={!readonly}
+      onChange={() => {
+        if (!readonly) {
+          // 이게 뭐지? 옵셔널 함수?에 뭘 넣으려면 점을 찍어줘야 하나?
+          setContent?.(editor.document)
+        }
+      }}
+    />
+  );
 }

@@ -10,6 +10,7 @@ import SignUp from "./pages/sign-up";
 import RootLayout from "@/pages/layout.tsx";
 import CreateTopic from '@/pages/topics/[topic_id]/create.tsx'
 import {Toaster} from '@/components'
+import {TopicDetail} from '@/pages/topics/[topic_id]/detail.tsx'
 
 // 여전히 index.html -> main.tsx가 실행되고, 여기서 createRoot가 App을 만들어 반환...
 // 단지 전에는 단순하게 App만 반환했는데, 이제는 라우터가 반환되는 형식...
@@ -25,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="sign-in" element={<SignIn/>}/>
             <Route path="sign-up" element={<SignUp/>}/>
             <Route path="topics/:id/create" element={<CreateTopic/>}/>
+            <Route path="topics/:id/detail" element={<TopicDetail/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

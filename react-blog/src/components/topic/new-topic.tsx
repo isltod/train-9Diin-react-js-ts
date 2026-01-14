@@ -4,6 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import "dayjs/locale/ko"
 import {CaseSensitive} from 'lucide-react'
+import {useNavigate} from 'react-router'
 
 dayjs.locale('ko')
 dayjs.extend(relativeTime)
@@ -50,9 +51,10 @@ function getSampleText(text: string, maxChars = 200): string {
 
 export function NewTopicCard({ topic }: Props) {
 
+  const navigate = useNavigate()
 
   return (
-    <Card className="p-4 cursor-pointer">
+    <Card className="p-4 cursor-pointer" onClick={() => { navigate(`/topics/${topic.id}/detail`) }}>
       <div className="flex justify-between gap-6">
         <div className="flex flex-col gap-4">
           <h3 className="h-16 text-base font-semibold tracking-tight line-clamp-2">
