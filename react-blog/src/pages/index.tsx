@@ -20,7 +20,7 @@ export default function Index() {
       try {
         const query = supabase
           .from("topics")
-          .select("*")
+          .select("*, users (email)")
           .eq("status", TOPIC_STATUS.PUBLISH)
 
         if (category && category.trim() !== "") {
@@ -35,6 +35,7 @@ export default function Index() {
 
         if (data) {
           setTopics(data)
+          console.log(data)
         }
 
       } catch (AppError) {
@@ -99,9 +100,11 @@ export default function Index() {
         </AppDraftsDialog>
       </div>
       {/*카테고리 사이드바*/}
-      <AppSidebar category={category} setCategory={handleCategory} />
+      <div className="hidden lg:block">
+        <AppSidebar category={category} setCategory={handleCategory} />
+      </div>
       {/*토픽 콘텐츠*/}
-      <section className="flex-1 flex flex-col gap-12">
+      <section className="w-full lg:w-[calc(100%-264px)] flex flex-col gap-12">
         {/*핫 토픽*/}
         <div className="flex flex-col gap-6 w-full">
           <div className="flex flex-col gap-1">
@@ -112,7 +115,7 @@ export default function Index() {
               </h4>
             </div>
           </div>
-          <div className="grid grid-cols-4 gap-6">
+          <div className="w-full flex items-center gap-6 overflow-auto">
             {/* 이게 대충 모양만 만들어서 번뜩거리는 모양이네... */}
             <SkeletonHotTopic/>
             <SkeletonHotTopic/>

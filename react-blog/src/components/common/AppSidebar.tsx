@@ -16,14 +16,14 @@ export function AppSidebar({ category, setCategory }: Props) {
         <h4 className="scroll-m-20 text-xl font-semibold tracking-tight">카테고리</h4>
         <ChevronDown className="mt-1"/>
       </div>
-      <div className="flex flex-col gap-2 w-full">
+      <div className="w-full flex flex-col gap-2">
         {
           CLASS_CATEGORIES.map((menu) => {
             return (
               // pl: padding-left
               <Button
                 key={menu.id}
-                className={`justify-start text-muted-foreground hover:pl-6 transition-all duration-500 ${category === menu.category && "text-foreground !pl-6"}`}
+                className={`justify-start text-muted-foreground hover:text-white hover:pl-6 transition-all duration-500 ${category === menu.category && "text-foreground !pl-6 bg-accent/50"} `}
                 variant="ghost"
                 onClick={() => {setCategory(menu.category)}}
               >
