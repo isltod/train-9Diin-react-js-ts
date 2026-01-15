@@ -67,7 +67,7 @@ export function NewTopicCard({ topic }: Props) {
       </div>
       <Separator/>
       <div className="flex justify-between">
-        <p>wolf@teoal.ent</p>
+        <p>{topic.users.email.split("@")[0]}</p>
         {/* <p>{dayjs(topic.created_at).format("YYYY. MM. DD.")}</p> */}
         <p>{dayjs(topic.created_at).fromNow()}</p>
       </div>

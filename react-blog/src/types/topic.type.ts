@@ -12,4 +12,5 @@ export interface Topic {
   category: string;
   thumbnail: string;
   status: typeof TOPIC_STATUS;
+  users: {email: string}
 }

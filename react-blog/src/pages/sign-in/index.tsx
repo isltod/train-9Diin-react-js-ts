@@ -6,6 +6,7 @@ import {NavLink, useNavigate} from 'react-router'
 import supabase from '@/lib/supabase.ts'
 import {toast} from 'sonner'
 import {useAuthStore} from '@/stores'
+import {useEffect} from 'react'
 
 const formSchema = z.object({
   email: z.email({
@@ -21,6 +22,25 @@ export default function SignIn() {
   const navigate = useNavigate()
   const {setUser} = useAuthStore()
 
+  useEffect(() => {
+    // 이건 로그인 된 상태에서는 로그인 페이지에 못들어오게 하는 코드라는데...왜 굳이 supabase에 묻지?
+    // 그냥 스토리지에 저장된 걸 사용하면 안되나? 그럼 스토리지는 뭐하러 만들었지?
+    const checkSession = async () => {
+      const {data: {session}} = await supabase.auth.getSession()
+
+      if (session?.user) {
+        setUser({
+          id: session.user.id,
+          // 그냥 하면 빨간줄... as string으로 타입 줘야 사라진다...
+          email: session.user.email as string,
+          role: session.user.role as string,
+        })
+        navigate('/')
+      }
+    }
+    checkSession()
+  }, [])
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -29,6 +49,19 @@ export default function SignIn() {
     },
   })
 
+  // 깃허브 oauth2
+  const handleGithubSignIn = async () => {
+    const {error} = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        queryParams: { access_type: "offline", prompt: "consent" },
+        redirectTo: `${import.meta.env.VITE_SUPABASE_BASE_URL}/auth/callback`,
+      },
+    })
+
+    if (error) toast.error(error.message)
+  }
+  // 이 사이트에서 로그인
   const onSubmit = async (formData : z.infer<typeof formSchema>) => {
     console.log("로그인 버튼 클릭...")
 
@@ -75,9 +108,9 @@ export default function SignIn() {
         </div>
         <div className="grid gap-3">
           {/* 소셜 로그인 */}
-          <Button variant="secondary">
-            <img src="/login_12795960.png" alt="@LOGIN" className="w-[18px] h-[18px] mr-1"/>
-            구글 로그인
+          <Button variant="secondary" onClick={handleGithubSignIn}>
+            <img src="/github_270798.png" alt="@LOGIN" className="w-[18px] h-[18px] mr-1"/>
+            깃허브 로그인
           </Button>
           {/* 경계선 */}
           <div className="relative">

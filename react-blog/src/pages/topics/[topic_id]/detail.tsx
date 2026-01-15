@@ -82,7 +82,7 @@ export function TopicDetail() {
 
   return (
     <main className="min-h-[720px]">
-      <section className="relative h-60 md:h-100 bg-cover bg-accent bg-[50%_35%]" style={{ backgroundImage: `url(${thumbnail})` }}>
+      <section className="relative h-50 sm:h-60 md:h-100 bg-cover bg-accent bg-[50%_35%]" style={{ backgroundImage: `url(${thumbnail})` }}>
         <div className="absolute top-6 z-10 left-6 flex gap-2">
           <Button variant="outline" size="icon" onClick={() => navigate("/") }>
             <ArrowLeft/>
