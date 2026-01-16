@@ -22,22 +22,23 @@ export default function SignIn() {
   const navigate = useNavigate()
   const {setUser} = useAuthStore()
 
-  useEffect(() => {
-    // 이건 로그인 된 상태에서는 로그인 페이지에 못들어오게 하는 코드라는데...왜 굳이 supabase에 묻지?
-    // 그냥 스토리지에 저장된 걸 사용하면 안되나? 그럼 스토리지는 뭐하러 만들었지?
-    const checkSession = async () => {
-      const {data: {session}} = await supabase.auth.getSession()
+  // 이건 로그인 된 상태에서는 로그인 페이지에 못들어오게 하는 코드라는데...왜 굳이 supabase에 묻지?
+  // 그냥 스토리지에 저장된 걸 사용하면 안되나? 그럼 스토리지는 뭐하러 만들었지?
+  const checkSession = async () => {
+    const {data: {session}} = await supabase.auth.getSession()
 
-      if (session?.user) {
-        setUser({
-          id: session.user.id,
-          // 그냥 하면 빨간줄... as string으로 타입 줘야 사라진다...
-          email: session.user.email as string,
-          role: session.user.role as string,
-        })
-        navigate('/')
-      }
+    if (session?.user) {
+      setUser({
+        id: session.user.id,
+        // 그냥 하면 빨간줄... as string으로 타입 줘야 사라진다...
+        email: session.user.email as string,
+        role: session.user.role as string,
+      })
+      navigate('/')
     }
+  }
+
+  useEffect(() => {
     checkSession()
   }, [])
 
@@ -51,6 +52,7 @@ export default function SignIn() {
 
   // 깃허브 oauth2
   const handleGithubSignIn = async () => {
+
     const {error} = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {

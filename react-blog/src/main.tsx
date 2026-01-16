@@ -11,6 +11,7 @@ import RootLayout from "@/pages/layout.tsx";
 import CreateTopic from '@/pages/topics/[topic_id]/create.tsx'
 import {Toaster} from '@/components'
 import {TopicDetail} from '@/pages/topics/[topic_id]/detail.tsx'
+import {AuthCallback} from '@/pages/auth/callback.tsx'
 
 // 여전히 index.html -> main.tsx가 실행되고, 여기서 createRoot가 App을 만들어 반환...
 // 단지 전에는 단순하게 App만 반환했는데, 이제는 라우터가 반환되는 형식...
@@ -23,6 +24,7 @@ createRoot(document.getElementById('root')!).render(
           거기에 Outlet 구멍에 밑에 것들을 다 끼워 넣어준다... */}
           <Route element={<RootLayout/>}>
             <Route index element={<App/>}/>
+            <Route path="auth/callback" element={<AuthCallback/>}/>
             <Route path="sign-in" element={<SignIn/>}/>
             <Route path="sign-up" element={<SignUp/>}/>
             <Route path="topics/:id/create" element={<CreateTopic/>}/>

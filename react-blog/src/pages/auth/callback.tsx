@@ -2,10 +2,12 @@ import {useNavigate} from 'react-router'
 import {toast} from 'sonner'
 import {useEffect} from 'react'
 import supabase from '@/lib/supabase.ts'
+import {useAuthStore} from '@/stores'
 
 export function AuthCallback() {
 
   const navigate = useNavigate();
+  const {setUser} = useAuthStore()
 
   useEffect(() => {
     const handleAuthCallback = async () => {
@@ -13,7 +15,7 @@ export function AuthCallback() {
       // 근데 이걸 왜 supabase에 또 묻지? 이미 로컬 스토리지에 토큰으로 와 있는데?
       const {data: {session}, error: sessionError} = await supabase.auth.getSession()
 
-      if (!session || sessionError) {
+      if (!session || !session.user || sessionError) {
         console.error("세션 처리 오류, 로그인에 문제가 있습니다.", sessionError)
         toast.error("로그인에 문제가 있습니다.")
 
@@ -22,7 +24,13 @@ export function AuthCallback() {
       }
 
       // 문제가 없는 경우는 메인 페이지로...
-      toast.success("로그인에 성공했습니다.")
+      setUser({
+        id: session.user.id,
+        // 그냥 하면 빨간줄... as string으로 타입 줘야 사라진다...
+        email: session.user.email as string,
+        role: session.user.role as string,
+      })
+      toast.success(`${session.user.app_metadata.provider} 로그인에 성공했습니다.`)
       navigate('/');
     }
 
