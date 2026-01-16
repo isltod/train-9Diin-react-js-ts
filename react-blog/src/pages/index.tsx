@@ -35,7 +35,6 @@ export default function Index() {
 
         if (data) {
           setTopics(data)
-          console.log(data)
         }
 
       } catch (AppError) {
